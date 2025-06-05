@@ -1,0 +1,16 @@
+MSA_LDI_df
+MSA_ST_W    0x868
+LD    0xffffffffffff83c0
+LWE    0x4bc0
+ADDIU
+LWE    0x284
+ADDIU
+LWE    0x288
+ADDIU
+LWE    0x254
+SWE    0x888
+SWE    0x88c
+SWE    0x890
+SWE    0x894
+MSA_LDI_df
+MSA_ST_W    0x878

@@ -1,0 +1,8 @@
+LD    0xffffffffffff8510
+ADDIU
+MSA_LD_W    0x248
+MSA_ST_W    0x878
+LD    0xffffffffffff8510
+ADDIU
+MSA_LD_W    0x248
+MSA_ST_W    0x888
