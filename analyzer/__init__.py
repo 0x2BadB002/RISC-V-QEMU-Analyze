@@ -35,14 +35,23 @@ def update_metrics(data: Metrics, cmd: Command, offset: int):
             cmd.address: Scarcity(last_seen=offset)
         })
 
+
 def analyze_vectorization(data: Metrics) -> float:
     return data.vectorization.rw / data.vectorization.total
 
+
 def analyze_space_locality(data: Metrics) -> dict[int, float]:
+    if data.vectorization.rw == 0:
+        return {0: 0.0}
+
     res = {}
     for address, count in data.address_usage.items():
         res[address] = count / data.vectorization.rw
     return res
 
+
 def analyze_alignment(data: Metrics) -> float:
+    if data.alignment.misaligned == 0:
+        return data.alignment.aligned
+
     return data.alignment.aligned / data.alignment.misaligned
