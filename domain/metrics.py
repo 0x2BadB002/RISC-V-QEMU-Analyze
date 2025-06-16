@@ -25,3 +25,4 @@ class Metrics:
     address_usage: dict[int, int] = field(default_factory=dict[int, int])
     address_scarcity: dict[int, Scarcity] = field(default_factory=dict[int, Scarcity])
     alignment: DataAlignment = field(default_factory=DataAlignment)
+    total_rw_count: int = 0

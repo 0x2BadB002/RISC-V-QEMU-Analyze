@@ -2,18 +2,43 @@ import pyparsing as pp
 
 from domain.command import Command
 
-hex_num = pp.Suppress("0x") + pp.Word(pp.srange("[0-9a-fA-F]"))
-parser = pp.Word(pp.srange("[a-zA-Z0-9_.]")) + pp.Opt(hex_num)
+
+def extract_mnemonic(tokens: str):
+    instruction_str = tokens[0]
+    return instruction_str.strip().split()[0] if instruction_str.strip() else ""
+
+
+integer = pp.Word(pp.nums).setParseAction(lambda t: int(t[0]))
+hex_number = pp.Regex(r'0x[0-9a-fA-F]+')
+mnemonic = pp.QuotedString('"', unquoteResults=True).setParseAction(extract_mnemonic)
+
+load_store = pp.Keyword("load") | pp.Keyword("store")
+
+comma = pp.Suppress(pp.Optional(pp.White()) + "," + pp.Optional(pp.White()))
+
+parser = (
+    integer("index") + comma
+    + hex_number("addr1") + comma
+    + hex_number("addr2") + comma
+    + mnemonic("instruction")
+    + pp.ZeroOrMore(
+        comma
+        + load_store("op_type")
+        + comma + hex_number("addr3")
+    )
+    + pp.StringEnd()
+)
 
 
 def parse(line: str) -> Command:
-    data = parser.parseString(line)
+    data = parser.parseString(line).asList()
 
     cmd = Command(
-        command=data[0],
+        cpu_index=data[0],
+        command=data[3],
     )
 
-    if len(data) > 1:
-        cmd.address = int(data[1], base=16)
+    if len(data) > 4:
+        cmd.address = int(data[5], base=16)
 
     return cmd

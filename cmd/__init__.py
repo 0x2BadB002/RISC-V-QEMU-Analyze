@@ -1,8 +1,7 @@
 import typer
 
 from parser import parse
-from analyzer import update_metrics, analyze_vectorization
-from analyzer import analyze_space_locality, analyze_alignment
+from analyzer import update_metrics, analyze_vectorization, analyze_space_locality, analyze_alignment, plot_spacial, plot_temporal
 from domain.metrics import Metrics
 
 
@@ -24,9 +23,13 @@ def analyze(filename: str) -> None:
     for address, locality in analyze_space_locality(data).items():
         print(hex(address), "\t->\t", locality)
 
+    plot_spacial(data)
+
     print("Временная локализация данных: ")
     for address, scarcity in data.address_scarcity.items():
         print(hex(address), "\t->\t", scarcity.mean_distance)
+
+    plot_temporal(data)
 
     print("Выравнивание данных: ", analyze_alignment(data))
 
